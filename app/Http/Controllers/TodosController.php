@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Todo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class TodosController extends Controller
 {
@@ -12,11 +13,10 @@ class TodosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Todo $todos)
     {
         //
-        $records = Todo::paginate(5);
-        return view('todos.index',compact('records'));
+        return view('todos.index')->with('todos', $todos->paginate(5));
     }
 
     /**
@@ -27,6 +27,7 @@ class TodosController extends Controller
     public function create()
     {
         //
+        return view('todos.create');
     }
 
     /**
@@ -38,6 +39,14 @@ class TodosController extends Controller
     public function store(Request $request)
     {
         //
+        $this->validate(request(), [
+            'name' => 'required',
+            'description' => 'required',
+        ]);
+        Todo::create($request->all());
+        Session::flash('success','The todo has been created');
+        return redirect(route('todos.index'));
+
     }
 
     /**
@@ -46,11 +55,10 @@ class TodosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Todo $todo)
     {
         //
-        $record = Todo::FindOrFail($id);
-        return view('todos.show',compact('record'));
+        return view('todos.show',compact('todo'));
     }
 
     /**
@@ -59,9 +67,12 @@ class TodosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Todo $todo)
     {
         //
+
+        return view('todos.edit', compact('todo'));
+        
     }
 
     /**
@@ -74,6 +85,22 @@ class TodosController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $this->validate(request(), [
+            'name' => 'required',
+            'description' => 'required',
+        ]);
+        Todo::findOrFail($id)->update($request->all());
+        Session::flash('success','The todo has been updated');
+        return redirect(route('todos.index'));
+    }
+
+    public function completed(Todo $todo , Request $request)
+    {
+        //
+
+        $todo->update($request->all());
+        Session::flash('success','The todo has been updated');
+        return redirect(route('todos.index'));
     }
 
     /**
@@ -85,5 +112,8 @@ class TodosController extends Controller
     public function destroy($id)
     {
         //
+        Todo::findOrFail($id)->delete();
+        Session::flash('deleted_todo','The todo has been deleted');
+        return redirect(route('todos.index'));
     }
 }

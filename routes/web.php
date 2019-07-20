@@ -18,3 +18,4 @@ Route::get('/', function () {
 });
 
 Route::resource('/todos','TodosController');
+Route::post('/todos/{todo}/completed','TodosController@completed');
