@@ -9,8 +9,8 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card card-default">
-                <div class="card-header">Create new todos</div>
-                <div class="card-body">
+                <div class="card-header font-weight-bold bg-success text-white">Create new todos</div>
+                <div class="card-body border border-success">
                     @if($errors->any())
                         <div class="alert alert-danger">
                             <ul class="list-group">
@@ -26,7 +26,7 @@
                         @csrf
                         <input type="hidden" name="completed" value=0>
 
-                        <div class="form-group">
+                        <div class="form-group ">
                             <input placeholder="Name" type="text" name="name" class="form-control" required>
                         </div>
 
@@ -35,7 +35,7 @@
                                       class="form-control" required></textarea>
                         </div>
 
-                        <button class="btn btn-success">Create Todo</button>
+                        <button class="btn btn-outline-success ">Create Todo</button>
                     </form>
                 </div>
             </div>

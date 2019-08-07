@@ -18,4 +18,5 @@ Route::get('/', function () {
 });
 
 Route::resource('/todos','TodosController');
-Route::post('/todos/{todo}/completed','TodosController@completed');
+Route::post('/todos/{todo}/completed','TodosController@completed')->name('todos.completed');
+Route::get('/todos/completed/index','TodosController@completedTodos')->name('todos.completed.index');

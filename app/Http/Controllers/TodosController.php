@@ -13,10 +13,10 @@ class TodosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Todo $todos)
+    public function index()
     {
         //
-        return view('todos.index')->with('todos', $todos->paginate(5));
+        return view('todos.index')->with('todos', Todo::whereCompleted(0)->paginate(5));
     }
 
     /**
@@ -75,6 +75,10 @@ class TodosController extends Controller
         
     }
 
+    public function completedTodos(){
+        return view('todos.index')->with('todos', Todo::whereCompleted(1)->paginate(5));
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -99,7 +103,12 @@ class TodosController extends Controller
         //
 
         $todo->update($request->all());
-        Session::flash('success','The todo has been updated');
+        if($todo->completed == 1){
+            Session::flash('success','The todo has been marked as completed');
+        }else{
+            Session::flash('success','The todo has been marked as uncompleted');
+        }
+
         return redirect(route('todos.index'));
     }
 
